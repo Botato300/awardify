@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+body {
+    background-color: rgb(255, 237, 213);
+    color: #222222;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
