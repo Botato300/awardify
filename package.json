@@ -3,21 +3,26 @@
 	"private": true,
 	"type": "module",
 	"engines": {
-		"node": ">= 22.0.0"
+		"node": ">= 24.7.0"
 	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"invite:create": "node scripts/create-invitation.ts",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+	},
+	"dependencies": {
+		"better-sqlite3": "^13.0.3"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^8.0.0",
 		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@tailwindcss/vite": "^4.3.0",
+		"@types/better-sqlite3": "^9.6.0",
 		"@types/node": "^26.6.5",
 		"daisyui": "^5.7.50",
 		"svelte": "^5.57.1",

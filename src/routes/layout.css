@@ -1,9 +1,10 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+    themes: light --default;
+}
 
 body {
-    background-color: rgb(255, 237, 213);
-    color: #222222;
+    background-color: var(--color-base-300);
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
