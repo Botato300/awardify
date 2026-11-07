@@ -18,7 +18,7 @@
 <footer class="footer sm:footer-horizontal bg-neutral text-neutral-content items-center py-4 px-6">
 	<div class="flex items-center">
 		<img src={logo} width="64" height="64" alt="Logo de Awardify" class="h-16 w-16 object-contain" />
-		<p>Hecho por <a href="https://tomasbottari.com/" class="link">Tomás Bottari</a></p>
+		<p>Hecho por <a href="https://tomasbottari.com/" target="_blank" class="link">Tomás Bottari</a></p>
 	</div>
 
 	<a href="https://github.com/Botato300/awardify" target="_blank" class="link flex items-center ml-auto">
