@@ -1,10 +1,16 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from "$app/forms";
 	import type { PageProps } from "./$types";
+	import EditAwardDialog from "../components/EditAwardDialog.svelte";
 
 	let { data, form }: PageProps = $props();
 	let deleteDialog: HTMLDialogElement;
 	let awardToDelete = $state<{ id: string; name: string } | null>(null);
+	let awardNameOverrides = $state<Record<string, string>>({});
+
+	function updateAwardName(award: { id: string; name: string }): void {
+		awardNameOverrides = { ...awardNameOverrides, [award.id]: award.name };
+	}
 
 	function confirmDeleteAward(award: { id: string; name: string }): void {
 		awardToDelete = award;
@@ -65,13 +71,18 @@
 		{:else}
 			<div class="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
 				{#each data.awards as award (award.id)}
+					{@const visibleAward = { ...award, name: awardNameOverrides[award.id] ?? award.name }}
 					<article class="card min-w-0 w-full border border-base-300 bg-base-100 shadow-sm transition hover:shadow-md">
 						<a class="card-body min-w-0" href={`/awards/${award.id}`}>
-							<h2 class="card-title min-w-0 max-w-full"><span class="block min-w-0 max-w-full truncate">{award.name}</span></h2>
+							<h2 class="card-title min-w-0 max-w-full"><span class="block min-w-0 max-w-full truncate">{visibleAward.name}</span></h2>
 						</a>
 						<div class="card-actions justify-end px-6 pb-4">
-							<button class="btn btn-outline btn-error btn-sm" type="button" aria-label={`Eliminar award ${award.name}`} onclick={() => confirmDeleteAward(award)}
-								>Eliminar</button
+							<EditAwardDialog award={visibleAward} onEdited={updateAwardName} />
+							<button
+								class="btn btn-outline btn-error btn-sm"
+								type="button"
+								aria-label={`Eliminar award ${visibleAward.name}`}
+								onclick={() => confirmDeleteAward(visibleAward)}>Eliminar</button
 							>
 						</div>
 					</article>

@@ -1,7 +1,7 @@
 import { error, fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import { findAward } from "../../../models/awards.server";
-import { AwardError, createCategory, createNominee, removeCategory, removeNominee, renameNominee } from "../../../services/awards.server";
+import { AwardError, createCategory, createNominee, removeCategory, removeNominee, renameCategory, renameNominee } from "../../../services/awards.server";
 
 export const load: PageServerLoad = ({ locals, params }) => {
 	const user = locals.user!;
@@ -42,6 +42,26 @@ export const actions: Actions = {
 			return fail(404, { categoryDeleteMessage: "No se encontró la categoría o no tienes permiso para eliminarla." });
 
 		return { categoryDeleted: true };
+	},
+	editCategory: async ({ locals, params, request }) => {
+		const user = locals.user!;
+
+		const formData = await request.formData();
+		const categoryId = String(formData.get("categoryId") ?? "");
+		const name = String(formData.get("name") ?? "");
+		if (!categoryId)
+			return fail(400, { categoryEditMessage: "No se indicó qué categoría editar." });
+
+		try {
+			renameCategory(user.id, params.awardId, categoryId, name);
+			return { category: { id: categoryId, name: name.trim() } };
+		} catch (error) {
+			if (error instanceof AwardError)
+				return fail(400, { categoryEditMessage: error.message });
+
+			console.error("Category update failed:", error);
+			return fail(500, { categoryEditMessage: "No se pudo actualizar la categoría. Intenta de nuevo." });
+		}
 	},
 	createNominee: async ({ locals, request }) => {
 		const user = locals.user!;

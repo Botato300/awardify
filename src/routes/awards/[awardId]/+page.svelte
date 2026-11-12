@@ -17,6 +17,10 @@
 	let deleteCategoryDialog: HTMLDialogElement;
 	let nomineeToDelete = $state<{ id: string; name: string } | null>(null);
 	let categoryToDelete = $state<{ id: string; name: string } | null>(null);
+	let categoryToEdit = $state<string | null>(null);
+	let categoryEditName = $state("");
+	let categoryEditMessage = $state("");
+	let categoryNameOverrides = $state<Record<string, string>>({});
 	let pendingNominees = $state<PendingNominee[]>([]);
 	let pendingVideoReplacements = $state<PendingVideoReplacement[]>([]);
 	let nomineeNameOverrides = $state<Record<string, string>>({});
@@ -30,6 +34,18 @@
 	function confirmDeleteCategory(category: { id: string; name: string }): void {
 		categoryToDelete = category;
 		deleteCategoryDialog.showModal();
+	}
+
+	function startEditingCategory(categoryId: string, name: string): void {
+		categoryToEdit = categoryId;
+		categoryEditName = name;
+		categoryEditMessage = "";
+	}
+
+	function cancelEditingCategory(): void {
+		categoryToEdit = null;
+		categoryEditName = "";
+		categoryEditMessage = "";
 	}
 
 	function addPendingNominee(categoryId: string, nominee: Nominee, file: File): void {
@@ -93,6 +109,24 @@
 			await update();
 		};
 	};
+
+	const enhanceCategoryEdit: SubmitFunction = () => {
+		return async ({ result, update }) => {
+			if (result.type === "success" && result.data?.category) {
+				const category = result.data.category;
+				categoryNameOverrides = { ...categoryNameOverrides, [category.id]: category.name };
+				categoryToEdit = null;
+				categoryEditName = "";
+				categoryEditMessage = "";
+				await update({ refreshAll: false });
+				return;
+			}
+
+			if (result.type === "failure") categoryEditMessage = result.data?.categoryEditMessage ?? "No se pudo actualizar la categoría. Intenta de nuevo.";
+
+			await update({ refreshAll: false });
+		};
+	};
 </script>
 
 <svelte:head>
@@ -132,7 +166,49 @@
 				<section class="card min-w-0 w-full border border-base-300 bg-base-100 shadow-sm">
 					<div class="card-body min-w-0 gap-5">
 						<div class="flex flex-wrap items-center justify-between gap-4">
-							<h2 class="card-title min-w-0 flex-1"><span class="block min-w-0 truncate">{category.name}</span></h2>
+							{#if categoryToEdit === category.id}
+								<form method="POST" action="?/editCategory" use:enhance={enhanceCategoryEdit} class="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+									<input type="hidden" name="categoryId" value={category.id} />
+									<label class="sr-only" for={`category-name-${category.id}`}>Nombre de la categoría</label>
+									<input
+										id={`category-name-${category.id}`}
+										class="input input-bordered input-sm min-w-0 flex-1"
+										type="text"
+										name="name"
+										bind:value={categoryEditName}
+										required
+										maxlength="100"
+									/>
+									<button class="btn btn-primary btn-sm" type="submit">Guardar</button>
+									<button class="btn btn-ghost btn-sm" type="button" onclick={cancelEditingCategory}>Cancelar</button>
+									{#if categoryEditMessage}
+										<p class="w-full text-sm text-error" role="alert">{categoryEditMessage}</p>
+									{/if}
+								</form>
+							{:else}
+								<div class="flex min-w-0 flex-1 items-center gap-2">
+									<h2 class="card-title min-w-0 flex-1"><span class="block min-w-0 truncate">{categoryNameOverrides[category.id] ?? category.name}</span></h2>
+									<button
+										class="btn btn-ghost btn-sm shrink-0"
+										type="button"
+										aria-label={`Editar nombre de la categoría ${categoryNameOverrides[category.id] ?? category.name}`}
+										onclick={() => startEditingCategory(category.id, categoryNameOverrides[category.id] ?? category.name)}
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="size-4"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											aria-hidden="true"
+										>
+											<path d="M12 20h9" />
+											<path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" />
+										</svg>
+									</button>
+								</div>
+							{/if}
 							<div class="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
 								<NomineeDialog {category} onCreated={(nominee, file) => addPendingNominee(category.id, nominee, file)} />
 								<button

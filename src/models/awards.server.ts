@@ -17,6 +17,15 @@ export function insertAward(id: string, userId: number, name: string, createdAt:
 	`).run(id, userId, name, createdAt);
 }
 
+export function updateAward(userId: number, awardId: string, name: string): boolean {
+	const result = database.prepare(`
+		UPDATE awards
+		SET name = ?
+		WHERE id = ? AND owner_user_id = ?
+	`).run(name, awardId, userId);
+	return result.changes === 1;
+}
+
 export function deleteAward(
 	userId: number,
 	awardId: string
@@ -112,6 +121,19 @@ export function insertCategory(id: string, userId: number, awardId: string, name
 		FROM awards
 		WHERE awards.id = ? AND awards.owner_user_id = ?
 	`).run(id, name, createdAt, awardId, userId);
+	return result.changes === 1;
+}
+
+export function updateCategory(userId: number, awardId: string, categoryId: string, name: string): boolean {
+	const result = database.prepare(`
+		UPDATE categories
+		SET name = ?
+		WHERE id = ? AND award_id IN (
+			SELECT awards.id
+			FROM awards
+			WHERE awards.id = ? AND awards.owner_user_id = ?
+		)
+	`).run(name, categoryId, awardId, userId);
 	return result.changes === 1;
 }
 

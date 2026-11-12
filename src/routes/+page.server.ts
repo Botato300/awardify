@@ -2,7 +2,7 @@ import { fail, redirect } from "@sveltejs/kit";
 
 import type { Actions, PageServerLoad } from "./$types";
 
-import { AwardError, createAward, getAwards, removeAward } from "../services/awards.server";
+import { AwardError, createAward, getAwards, removeAward, renameAward } from "../services/awards.server";
 import { deleteSession } from "../services/auth.server";
 import { SESSION_COOKIE } from "../services/session-cookie.server";
 
@@ -33,6 +33,26 @@ export const actions: Actions = {
 		}
 
 		redirect(303, `/awards/${awardId}`);
+	},
+	editAward: async ({ request, locals }) => {
+		const user = locals.user!;
+
+		const formData = await request.formData();
+		const awardId = String(formData.get("awardId") ?? "");
+		const name = String(formData.get("name") ?? "");
+		if (!awardId)
+			return fail(400, { awardEditMessage: "No se indicó qué award editar." });
+
+		try {
+			renameAward(user.id, awardId, name);
+			return { award: { id: awardId, name: name.trim() } };
+		} catch (error) {
+			if (error instanceof AwardError)
+				return fail(400, { awardEditMessage: error.message });
+
+			console.error("Award update failed:", error);
+			return fail(500, { awardEditMessage: "No se pudo actualizar el award. Intenta de nuevo." });
+		}
 	},
 	deleteAward: async ({ request, locals }) => {
 		const user = locals.user!;

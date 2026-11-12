@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { Nominee } from "../models/award";
-import { deleteAward as deleteAwardRecord, deleteCategory as deleteCategoryRecord, deleteNominee as deleteNomineeRecord, insertAward, insertCategory, insertNominee, listAwards, updateNominee as updateNomineeRecord } from "../models/awards.server";
+import { deleteAward as deleteAwardRecord, deleteCategory as deleteCategoryRecord, deleteNominee as deleteNomineeRecord, insertAward, insertCategory, insertNominee, listAwards, updateAward as updateAwardRecord, updateCategory as updateCategoryRecord, updateNominee as updateNomineeRecord } from "../models/awards.server";
 import { removeVideoFiles } from "./video-uploads.server";
 
 export class AwardError extends Error { }
@@ -29,6 +29,15 @@ export function createAward(userId: number, name: string): string {
 	insertAward(awardId, userId, cleanName, Date.now());
 
 	return awardId;
+}
+
+export function renameAward(userId: number, awardId: string, name: string): void {
+	const cleanName = name.trim();
+	if (!cleanName || cleanName.length > 100)
+		throw new AwardError("El nombre del award debe tener entre 1 y 100 caracteres.");
+
+	if (!updateAwardRecord(userId, awardId, cleanName))
+		throw new AwardError("No se encontró el award o no tienes permiso para modificarlo.");
 }
 
 export async function removeAward(userId: number, awardId: string): Promise<boolean> {
@@ -61,6 +70,18 @@ export function createCategory(userId: number, awardId: string, name: string): v
 		"Ya existe una categoría con ese nombre."
 	))
 		throw new AwardError("No se encontró el award o no tienes permiso para modificarlo.");
+}
+
+export function renameCategory(userId: number, awardId: string, categoryId: string, name: string): void {
+	const cleanName = name.trim();
+	if (!cleanName || cleanName.length > 100)
+		throw new AwardError("El nombre de la categoría debe tener entre 1 y 100 caracteres.");
+
+	if (!withUniqueConstraintMessage(
+		() => updateCategoryRecord(userId, awardId, categoryId, cleanName),
+		"Ya existe una categoría con ese nombre."
+	))
+		throw new AwardError("No se encontró la categoría o no tienes permiso para modificarla.");
 }
 
 export function createNominee(userId: number, categoryId: string, name: string): Nominee {
