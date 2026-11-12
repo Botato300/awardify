@@ -15,7 +15,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"dependencies": {
-		"better-sqlite3": "^13.0.3"
+		"better-sqlite3": "^13.0.3",
+		"file-type": "^22.2.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^8.0.0",

@@ -1,11 +1,7 @@
 import { fail, redirect } from "@sveltejs/kit";
-import type { Actions, PageServerLoad } from "./$types";
+import type { Actions } from "./$types";
 import { createSession, findUser, verifyPassword } from "../../services/auth.server";
 import { setSessionCookie } from "../../services/session-cookie.server";
-
-export const load: PageServerLoad = ({ locals }) => {
-	if (locals.user) redirect(303, "/");
-};
 
 export const actions: Actions = {
 	default: async ({ request, cookies }) => {
