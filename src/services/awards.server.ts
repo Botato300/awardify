@@ -27,6 +27,7 @@ export function createAward(userId: number, name: string): string {
 
 	const awardId = randomUUID();
 	insertAward(awardId, userId, cleanName, Date.now());
+
 	return awardId;
 }
 
@@ -36,6 +37,7 @@ export async function removeAward(userId: number, awardId: string): Promise<bool
 		return false;
 
 	await removeVideoFiles(deleted.videos, deleted.uploadIds);
+
 	return true;
 }
 
@@ -45,6 +47,7 @@ export async function removeCategory(userId: number, awardId: string, categoryId
 		return false;
 
 	await removeVideoFiles(deleted.videos, deleted.uploadIds);
+
 	return true;
 }
 
@@ -93,5 +96,6 @@ export async function removeNominee(userId: number, awardId: string, nomineeId: 
 		return false;
 
 	await removeVideoFiles(deleted.videos, deleted.uploadIds);
+
 	return true;
 }

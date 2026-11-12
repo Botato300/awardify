@@ -41,7 +41,10 @@
 		const nominees = category.nominees.map((nominee) => ({
 			...nominee,
 			name: nomineeNameOverrides[nominee.id] ?? nominee.name,
-			initialFile: pendingNominees.find((pending) => pending.nominee.id === nominee.id)?.file ?? pendingVideoReplacements.find((pending) => pending.nomineeId === nominee.id)?.file ?? null,
+			initialFile:
+				pendingNominees.find((pending) => pending.nominee.id === nominee.id)?.file ??
+				pendingVideoReplacements.find((pending) => pending.nomineeId === nominee.id)?.file ??
+				null,
 		}));
 
 		for (const pending of pendingNominees) {
@@ -66,13 +69,9 @@
 
 	function updateNominee(nominee: { id: string; name: string }, video: File | null): void {
 		nomineeNameOverrides = { ...nomineeNameOverrides, [nominee.id]: nominee.name };
-		if (!video)
-			return;
+		if (!video) return;
 
-		pendingVideoReplacements = [
-			...pendingVideoReplacements.filter((pending) => pending.nomineeId !== nominee.id),
-			{ nomineeId: nominee.id, file: video }
-		];
+		pendingVideoReplacements = [...pendingVideoReplacements.filter((pending) => pending.nomineeId !== nominee.id), { nomineeId: nominee.id, file: video }];
 		setNomineeUploading(nominee.id, true);
 	}
 

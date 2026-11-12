@@ -20,6 +20,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
 	try {
 		const upload = await createVideoUpload(user.id, uploadInput.nomineeId, uploadInput.fileSize);
+
 		return Response.json(upload, { status: 201 });
 	} catch (error) {
 		if (error instanceof UploadError)

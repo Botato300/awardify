@@ -33,6 +33,7 @@ export async function hashPassword(password: string): Promise<string> {
 
 	const encodedSalt = salt.toString("base64").replace(/=+$/, "");
 	const encodedKey = derivedKey.toString("base64").replace(/=+$/, "");
+
 	return `$argon2id$v=19$m=19456,t=2,p=1$${encodedSalt}$${encodedKey}`;
 }
 
@@ -59,6 +60,7 @@ export async function verifyPassword(password: string, storedHash: string): Prom
 export async function registerWithInvitation(token: string, email: string, password: string): Promise<User | null> {
 	const tokenHash = hashToken(token);
 	const passwordHash = await hashPassword(password);
+
 	return registerUserWithInvitation(tokenHash, email, passwordHash, Date.now());
 }
 
@@ -70,6 +72,7 @@ export function createSession(userId: number): string {
 	const token = randomBytes(32).toString("base64url");
 	const now = Date.now();
 	saveSession(hashToken(token), userId, now + SESSION_DURATION_SECONDS * 1000, now);
+
 	return token;
 }
 
@@ -84,6 +87,7 @@ export function getUserForSession(token: string): User | null {
 		deleteSession(token);
 		return null;
 	}
+
 	return { id: session.id, email: session.email };
 }
 

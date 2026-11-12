@@ -36,5 +36,6 @@ export const handleError: HandleServerError = ({ kind, error }) => {
 		return error;
 
 	console.error("Unhandled server error:", error);
+
 	return { message: "Ocurrió un error inesperado. Intenta de nuevo." };
 };

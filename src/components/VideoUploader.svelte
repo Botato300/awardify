@@ -30,8 +30,7 @@
 
 	$effect(() => {
 		const file = initialFile;
-		if (!file || file === lastInitialFile)
-			return;
+		if (!file || file === lastInitialFile) return;
 
 		lastInitialFile = file;
 		setPreview(file);
@@ -62,6 +61,7 @@
 			clearPreview();
 			isUploading = false;
 			onUploadingChange?.(nomineeId, false);
+
 			if (initialUpload) {
 				await refreshAll().catch(() => undefined);
 				onInitialUploadFinished?.(nomineeId);
@@ -110,6 +110,7 @@
 			const completeResponse = await fetch(`/api/uploads/${upload.id}/complete`, {
 				method: "POST",
 			});
+
 			if (!completeResponse.ok) throw new UploadRequestError(await readError(completeResponse));
 
 			completed = true;
@@ -123,9 +124,8 @@
 					? error.message
 					: "No se pudo subir el video. Comprueba tu conexión e inténtalo de nuevo.";
 		} finally {
-			if (uploadId && !completed) {
-				await fetch(`/api/uploads/${uploadId}`, { method: "DELETE" }).catch(() => undefined);
-			}
+			if (uploadId && !completed) await fetch(`/api/uploads/${uploadId}`, { method: "DELETE" }).catch(() => undefined);
+
 			if (initialUpload) {
 				if (!pageRefreshed) {
 					await refreshAll().catch(() => undefined);
@@ -138,7 +138,6 @@
 			onUploadingChange?.(nomineeId, false);
 		}
 	}
-
 </script>
 
 <div class="mt-5 flex min-w-0 w-full flex-col gap-3">

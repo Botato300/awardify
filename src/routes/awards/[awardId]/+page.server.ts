@@ -26,6 +26,7 @@ export const actions: Actions = {
 				return fail(400, { message: error.message });
 
 			console.error("Category creation failed:", error);
+
 			return fail(500, { message: "No se pudo crear la categoría. Intenta de nuevo." });
 		}
 	},
@@ -59,6 +60,7 @@ export const actions: Actions = {
 				return fail(400, { message: error.message });
 
 			console.error("Nominee creation failed:", error);
+
 			return fail(500, { message: "No se pudo crear el nominado. Intenta de nuevo." });
 		}
 	},
