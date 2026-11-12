@@ -72,14 +72,17 @@
 			<div class="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
 				{#each data.awards as award (award.id)}
 					{@const visibleAward = { ...award, name: awardNameOverrides[award.id] ?? award.name }}
-					<article class="card min-w-0 w-full border border-base-300 bg-base-100 shadow-sm transition hover:shadow-md">
-						<a class="card-body min-w-0" href={`/awards/${award.id}`}>
-							<h2 class="card-title min-w-0 max-w-full"><span class="block min-w-0 max-w-full truncate">{visibleAward.name}</span></h2>
+					<article class="card relative min-w-0 w-full border border-base-300 bg-base-100 shadow-sm transition hover:shadow-md">
+						<a class="absolute inset-0 z-0 rounded-box focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary" href={`/awards/${award.id}`} aria-label={`Abrir award ${visibleAward.name}`}>
+							<span class="sr-only">Abrir award {visibleAward.name}</span>
 						</a>
-						<div class="card-actions justify-end px-6 pb-4">
+						<div class="card-body min-w-0">
+							<h2 class="card-title min-w-0 max-w-full"><span class="block min-w-0 max-w-full truncate">{visibleAward.name}</span></h2>
+						</div>
+						<div class="card-actions pointer-events-none relative z-10 justify-end px-6 pb-4">
 							<EditAwardDialog award={visibleAward} onEdited={updateAwardName} />
 							<button
-								class="btn btn-outline btn-error btn-sm"
+								class="btn btn-outline btn-error btn-sm pointer-events-auto"
 								type="button"
 								aria-label={`Eliminar award ${visibleAward.name}`}
 								onclick={() => confirmDeleteAward(visibleAward)}>Eliminar</button

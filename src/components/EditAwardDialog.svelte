@@ -37,9 +37,9 @@
 	};
 </script>
 
-<button class="btn btn-ghost btn-sm" type="button" aria-label={`Editar award ${award.name}`} onclick={openDialog}>Editar</button>
+<button class="btn btn-ghost btn-sm pointer-events-auto" type="button" aria-label={`Editar award ${award.name}`} onclick={openDialog}>Editar</button>
 
-<dialog bind:this={dialog} class="modal" aria-labelledby={`edit-award-title-${award.id}`}>
+<dialog bind:this={dialog} class="modal pointer-events-auto" aria-labelledby={`edit-award-title-${award.id}`}>
 	<div class="modal-box">
 		<h2 id={`edit-award-title-${award.id}`} class="text-lg font-bold">Editar award</h2>
 
