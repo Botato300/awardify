@@ -7,8 +7,8 @@
 	let { children }: LayoutProps = $props();
 </script>
 
-<header>
-	<a href="/" class="flex items-center max-w-fit">
+<header class="p-2">
+	<a href="/" class="flex items-center max-w-fit link no-underline">
 		<img src={logo} width="64" height="64" alt="Logo de Awardify" class="h-16 w-16 object-contain" />
 		<span class="font-bold">Awardify</span>
 	</a>
