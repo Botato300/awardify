@@ -99,7 +99,7 @@
 			<input type="hidden" name="categoryId" value={category.id} />
 			<input type="hidden" name="videoSelected" value={selectedVideo ? "true" : "false"} />
 			<label class="form-control w-full">
-				<span class="label-text mb-2">Nombre del nominado</span>
+				<span class="block mb-1">Nombre del nominado</span>
 				<input class="input input-bordered w-full" type="text" name="name" bind:value={nomineeName} required maxlength="100" />
 			</label>
 			<input bind:this={videoInput} class="hidden" type="file" name="video" accept="video/mp4,video/webm,.mp4,.webm" onchange={selectVideo} />
@@ -112,7 +112,7 @@
 					<p class="text-sm text-gray-500">Video seleccionado</p>
 					{#if previewUrl}
 						<video
-							class="aspect-video w-full rounded-box bg-neutral"
+							class="aspect-video w-full rounded-box bg-black"
 							controls
 							muted
 							controlslist="nodownload noplaybackrate"

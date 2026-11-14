@@ -68,3 +68,10 @@ main {
     display: flex;
     flex-direction: column;
 }
+
+input:is(:autofill, :-webkit-autofill) {
+    box-shadow: 0 0 0 20px var(--color-base-300) inset;
+
+    -webkit-text-fill-color: var(--color-base-content);
+    caret-color: var(--color-base-content);
+}

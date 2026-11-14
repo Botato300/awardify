@@ -143,7 +143,7 @@
 <div class="mt-5 flex min-w-0 w-full flex-col gap-3">
 	{#if previewUrl}
 		<video
-			class="aspect-video w-full max-w-full rounded-box bg-neutral"
+			class="aspect-video w-full max-w-full rounded-box bg-black"
 			controls
 			muted
 			controlslist="nodownload noplaybackrate"
@@ -156,7 +156,7 @@
 	{:else if videos.length > 0}
 		{#each videos as video (video.id)}
 			<video
-				class="aspect-video w-full max-w-full rounded-box bg-neutral"
+				class="aspect-video w-full max-w-full rounded-box bg-black"
 				controls
 				muted
 				controlslist="nodownload noplaybackrate"

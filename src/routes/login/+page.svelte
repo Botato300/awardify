@@ -19,16 +19,33 @@
 			{/if}
 
 			<label class="form-control w-full">
-				<span class="label-text mb-2">Email</span>
-				<input class="input input-bordered w-full" type="email" name="email" autocomplete="email" required maxlength="254" value={form?.email ?? ""} />
+				<span class="block mb-1">Correo electrónico</span>
+				<input
+					class="input input-bordered w-full"
+					type="email"
+					name="email"
+					placeholder="Ingrese su correo electrónico"
+					autocomplete="email"
+					required
+					maxlength="254"
+					value={form?.email ?? ""}
+				/>
 			</label>
 
 			<label class="form-control w-full">
-				<span class="label-text mb-2">Contraseña</span>
-				<input class="input input-bordered w-full" type="password" name="password" autocomplete="current-password" required maxlength="1024" />
+				<span class="block mb-1">Contraseña</span>
+				<input
+					class="input input-bordered w-full"
+					type="password"
+					name="password"
+					placeholder="Ingrese su contraseña"
+					autocomplete="current-password"
+					required
+					maxlength="1024"
+				/>
 			</label>
 
-			<button class="btn btn-primary mt-2" type="submit">Entrar</button>
+			<button class="btn btn-primary mt-2" type="submit">Iniciar sesión</button>
 		</div>
 	</form>
 </section>

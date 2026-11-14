@@ -96,7 +96,7 @@
 		<form method="POST" action="?/editNominee" use:enhance={enhanceNomineeUpdate} class="mt-4 flex flex-col gap-4">
 			<input type="hidden" name="nomineeId" value={nominee.id} />
 			<label class="form-control w-full">
-				<span class="label-text mb-2">Nombre del nominado</span>
+				<span class="block mb-1">Nombre del nominado</span>
 				<input class="input input-bordered w-full" type="text" name="name" bind:value={nomineeName} required maxlength="100" />
 			</label>
 			<input bind:this={videoInput} class="hidden" type="file" accept="video/mp4,video/webm,.mp4,.webm" onchange={selectVideo} />
@@ -104,7 +104,7 @@
 				{#if selectedVideo && previewUrl}
 					<p class="text-sm text-gray-500">Vista previa del nuevo video</p>
 					<video
-						class="aspect-video w-full rounded-box bg-neutral"
+						class="aspect-video w-full rounded-box bg-black"
 						controls
 						muted
 						controlslist="nodownload noplaybackrate"
@@ -118,7 +118,7 @@
 					<p class="text-sm text-gray-500">Video actual</p>
 					{#each videos as video (video.id)}
 						<video
-							class="aspect-video w-full rounded-box bg-neutral"
+							class="aspect-video w-full rounded-box bg-black"
 							controls
 							muted
 							controlslist="nodownload noplaybackrate"

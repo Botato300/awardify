@@ -2,7 +2,7 @@
 	import { enhance, type SubmitFunction } from "$app/forms";
 	import type { PageProps } from "./$types";
 	import EditNomineeDialog from "../../../components/EditNomineeDialog.svelte";
-	import NomineeDialog from "../../../components/NomineeDialog.svelte";
+	import AddNomineeDialog from "../../../components/AddNomineeDialog.svelte";
 	import VideoUploader from "../../../components/VideoUploader.svelte";
 	import type { Nominee, Video } from "../../../models/award";
 
@@ -146,7 +146,7 @@
 			<h2 class="card-title">Crear categoría</h2>
 			<div class="flex flex-col gap-3 sm:flex-row">
 				<input class="input input-bordered w-full" type="text" name="name" placeholder="Nombre de la categoría" required maxlength="100" />
-				<button class="btn btn-primary sm:w-auto" type="submit">Agregar categoría</button>
+				<button class="btn btn-primary sm:w-auto" type="submit">Crear categoría</button>
 			</div>
 		</div>
 	</form>
@@ -179,7 +179,7 @@
 										required
 										maxlength="100"
 									/>
-									<button class="btn btn-primary btn-sm" type="submit">Guardar</button>
+									<button class="btn btn-secondary btn-sm" type="submit">Guardar</button>
 									<button class="btn btn-ghost btn-sm" type="button" onclick={cancelEditingCategory}>Cancelar</button>
 									{#if categoryEditMessage}
 										<p class="w-full text-sm text-error" role="alert">{categoryEditMessage}</p>
@@ -210,7 +210,7 @@
 								</div>
 							{/if}
 							<div class="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
-								<NomineeDialog {category} onCreated={(nominee, file) => addPendingNominee(category.id, nominee, file)} />
+								<AddNomineeDialog {category} onCreated={(nominee, file) => addPendingNominee(category.id, nominee, file)} />
 								<button
 									class="btn btn-outline btn-error btn-sm"
 									type="button"
@@ -270,12 +270,14 @@
 <dialog bind:this={deleteCategoryDialog} class="modal" aria-labelledby="delete-category-title">
 	<div class="modal-box">
 		<h2 id="delete-category-title" class="text-lg font-bold">Eliminar categoría</h2>
-		<p class="pt-4">¿Seguro que quieres eliminar esta categoría?</p>
-		<p class="truncate font-semibold">{categoryToDelete?.name}</p>
-		<p>También se eliminarán todos sus nominados, videos y subidas pendientes.</p>
+
+		<p class="pt-4">Categoría a eliminar: <span class="truncate font-semibold">{categoryToDelete?.name}</span></p>
+		<p>También se eliminarán todos sus nominados y videos.</p>
+
 		{#if form?.categoryDeleteMessage}
 			<p class="alert alert-error" role="alert">{form.categoryDeleteMessage}</p>
 		{/if}
+
 		<div class="modal-action flex-wrap">
 			<form method="dialog">
 				<button class="btn" type="submit">Cancelar</button>
@@ -294,9 +296,10 @@
 <dialog bind:this={deleteDialog} class="modal" aria-labelledby="delete-nominee-title">
 	<div class="modal-box">
 		<h2 id="delete-nominee-title" class="text-lg font-bold">Eliminar nominado</h2>
-		<p class="pt-4">¿Seguro que quieres eliminar este nominado?</p>
-		<p class="truncate font-semibold">{nomineeToDelete?.name}</p>
+
+		<p class="pt-4">Nominado a eliminar: <span class="truncate font-semibold">{nomineeToDelete?.name}</span></p>
 		<p>También se eliminará el video asociado.</p>
+
 		<div class="modal-action flex-wrap">
 			<form method="dialog">
 				<button class="btn" type="submit">Cancelar</button>

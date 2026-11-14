@@ -73,11 +73,7 @@
 				{#each data.awards as award (award.id)}
 					{@const visibleAward = { ...award, name: awardNameOverrides[award.id] ?? award.name }}
 					<article class="card relative min-w-0 w-full border border-base-300 bg-base-100 shadow-sm transition hover:shadow-md">
-						<a
-							class="absolute inset-0 z-0 rounded-box focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-							href={`/awards/${award.id}`}
-							aria-label={`Abrir award ${visibleAward.name}`}
-						>
+						<a class="absolute inset-0 z-0 rounded-box link" href={`/awards/${award.id}`} aria-label={`Abrir award ${visibleAward.name}`}>
 							<span class="sr-only">Abrir award {visibleAward.name}</span>
 						</a>
 						<div class="card-body min-w-0">
@@ -102,8 +98,7 @@
 <dialog bind:this={deleteDialog} class="modal" aria-labelledby="delete-award-title">
 	<div class="modal-box">
 		<h2 id="delete-award-title" class="text-lg font-bold">Eliminar award</h2>
-		<p class="pt-4">¿Seguro que quieres eliminar este award?</p>
-		<p class="truncate font-semibold">{awardToDelete?.name}</p>
+		<p class="pt-4">Award a eliminar: <span class="truncate font-semibold">{awardToDelete?.name}</span></p>
 		<p>También se eliminarán sus categorías, nominados, y videos.</p>
 		{#if form?.deleteMessage}
 			<p class="alert alert-error" role="alert">{form.deleteMessage}</p>

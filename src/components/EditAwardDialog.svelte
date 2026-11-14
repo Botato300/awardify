@@ -50,7 +50,7 @@
 		<form method="POST" action="?/editAward" use:enhance={enhanceAwardUpdate} class="mt-4 flex flex-col gap-4">
 			<input type="hidden" name="awardId" value={award.id} />
 			<label class="form-control w-full">
-				<span class="label-text mb-2">Nombre del award</span>
+				<span class="block mb-1">Nombre del award</span>
 				<input class="input input-bordered w-full" type="text" name="name" bind:value={awardName} required maxlength="100" />
 			</label>
 			<div class="modal-action flex-wrap">
