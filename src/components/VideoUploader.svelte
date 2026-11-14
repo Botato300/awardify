@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { refreshAll } from "$app/navigation";
+
 	import type { Video } from "../models/award";
+
 	import { MAX_VIDEO_SIZE } from "../services/video-upload-limits";
 
 	class UploadRequestError extends Error {}

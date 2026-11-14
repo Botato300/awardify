@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from "$app/forms";
+	import ArrowLeftIcon from "phosphor-svelte/lib/ArrowLeftIcon";
+	import PencilSimpleIcon from "phosphor-svelte/lib/PencilSimpleIcon";
+	import TrashIcon from "phosphor-svelte/lib/TrashIcon";
+
 	import type { PageProps } from "./$types";
+	import type { Nominee, Video } from "../../../models/award";
+
 	import EditNomineeDialog from "../../../components/EditNomineeDialog.svelte";
 	import AddNomineeDialog from "../../../components/AddNomineeDialog.svelte";
 	import VideoUploader from "../../../components/VideoUploader.svelte";
-	import type { Nominee, Video } from "../../../models/award";
 
 	type ManagedNominee = Nominee & { videos: Video[] };
 	type PendingNominee = { categoryId: string; nominee: Nominee; file: File };
@@ -134,7 +139,10 @@
 </svelte:head>
 
 <section class="mx-auto min-w-0 w-full max-w-5xl flex-1 p-6 md:p-10">
-	<a href="/" class="link">← Mis awards</a>
+	<a href="/" class="link no-underline flex gap-2 items-center max-w-max">
+		<ArrowLeftIcon size="1rem" />
+		Ir atrás
+	</a>
 	<h1 class="mt-4 truncate text-3xl font-bold">{data.award.name}</h1>
 
 	{#if form?.message}
@@ -187,25 +195,16 @@
 								</form>
 							{:else}
 								<div class="flex min-w-0 flex-1 items-center gap-2">
-									<h2 class="card-title min-w-0 flex-1"><span class="block min-w-0 truncate">{categoryNameOverrides[category.id] ?? category.name}</span></h2>
+									<h2 class="card-title min-w-0 flex-1">
+										<span class="block min-w-0 truncate">{categoryNameOverrides[category.id] ?? category.name}</span>
+									</h2>
 									<button
 										class="btn btn-ghost btn-sm shrink-0"
 										type="button"
 										aria-label={`Editar nombre de la categoría ${categoryNameOverrides[category.id] ?? category.name}`}
 										onclick={() => startEditingCategory(category.id, categoryNameOverrides[category.id] ?? category.name)}
 									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											class="size-4"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											stroke-width="2"
-											aria-hidden="true"
-										>
-											<path d="M12 20h9" />
-											<path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" />
-										</svg>
+										<PencilSimpleIcon size="1.3rem" weight="duotone" />
 									</button>
 								</div>
 							{/if}
@@ -216,8 +215,11 @@
 									type="button"
 									disabled={isCategoryUploading}
 									aria-label={`Eliminar categoría ${category.name}`}
-									onclick={() => confirmDeleteCategory(category)}>Eliminar categoría</button
+									onclick={() => confirmDeleteCategory(category)}
 								>
+									<TrashIcon size="1rem" />
+									Eliminar categoría
+								</button>
 							</div>
 							{#if isCategoryUploading}
 								<p class="w-full text-right text-sm text-gray-500">Espera a que termine la subida para eliminar la categoría.</p>
@@ -241,12 +243,15 @@
 													onEdited={updateNominee}
 												/>
 												<button
-													class="btn btn-ghost btn-sm shrink-0 text-error"
+													class="btn btn-ghost btn-sm shrink-0 text-error tooltip"
 													type="button"
 													disabled={uploadingNomineeIds.includes(nominee.id)}
 													aria-label={`Eliminar nominado ${nominee.name}`}
-													onclick={() => confirmDeleteNominee(nominee)}>Eliminar</button
+													data-tip="Eliminar nominado"
+													onclick={() => confirmDeleteNominee(nominee)}
 												>
+													<TrashIcon size="1rem" />
+												</button>
 											</div>
 											<VideoUploader
 												nomineeId={nominee.id}
@@ -284,7 +289,7 @@
 			</form>
 			<form method="POST" action="?/deleteCategory" use:enhance={enhanceCategoryDeletion}>
 				<input type="hidden" name="categoryId" value={categoryToDelete?.id ?? ""} />
-				<button class="btn btn-error" type="submit" disabled={!categoryToDelete}>Eliminar categoría</button>
+				<button class="btn btn-error" type="submit" disabled={!categoryToDelete}>Eliminar</button>
 			</form>
 		</div>
 	</div>

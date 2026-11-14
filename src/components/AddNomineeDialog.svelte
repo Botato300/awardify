@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import { enhance, type SubmitFunction } from "$app/forms";
+
+	import PlusIcon from "phosphor-svelte/lib/PlusIcon";
+	import UploadSimpleIcon from "phosphor-svelte/lib/UploadSimpleIcon";
+
 	import type { Nominee } from "../models/award";
+
 	import { MAX_VIDEO_SIZE } from "../services/video-upload-limits";
 
 	let {
@@ -84,7 +89,10 @@
 	};
 </script>
 
-<button class="btn btn-secondary btn-sm shrink-0" type="button" onclick={openDialog}>Agregar nominado</button>
+<button class="btn btn-secondary btn-sm shrink-0 items-center" type="button" onclick={openDialog}>
+	<PlusIcon size="1rem" />
+	Agregar nominado
+</button>
 
 <dialog bind:this={dialog} class="modal" aria-labelledby={`add-nominee-title-${category.id}`} onclose={resetForm}>
 	<div class="modal-box">
@@ -104,7 +112,10 @@
 			</label>
 			<input bind:this={videoInput} class="hidden" type="file" name="video" accept="video/mp4,video/webm,.mp4,.webm" onchange={selectVideo} />
 			<div class="flex flex-col gap-2">
-				<button class="btn btn-outline self-center" type="button" onclick={openVideoPicker}>Seleccionar video</button>
+				<button class="btn btn-outline self-center items-center" type="button" onclick={openVideoPicker}>
+					<UploadSimpleIcon size="1.2rem" />
+					Seleccionar video
+				</button>
 
 				<p class="text-sm text-gray-500 text-center">Solo se permiten videos en formato .mp4 o .webm de hasta 300 MB</p>
 

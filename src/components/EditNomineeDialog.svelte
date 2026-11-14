@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from "$app/forms";
+
+	import PencilSimpleIcon from "phosphor-svelte/lib/PencilSimpleIcon";
+	import UploadSimpleIcon from "phosphor-svelte/lib/UploadSimpleIcon";
+
 	import type { Nominee, Video } from "../models/award";
+
 	import { MAX_VIDEO_SIZE } from "../services/video-upload-limits";
 
 	let {
@@ -82,7 +87,16 @@
 	};
 </script>
 
-<button class="btn btn-ghost btn-sm shrink-0" type="button" {disabled} aria-label={`Editar nominado ${nominee.name}`} onclick={openDialog}>Editar</button>
+<button
+	class="btn btn-ghost btn-sm shrink-0 tooltip"
+	type="button"
+	{disabled}
+	aria-label={`Editar nominado ${nominee.name}`}
+	onclick={openDialog}
+	data-tip="Editar nominado"
+>
+	<PencilSimpleIcon size="1rem" />
+</button>
 
 <dialog bind:this={dialog} class="modal" aria-labelledby={`edit-nominee-title-${nominee.id}`} onclose={resetForm}>
 	<div class="modal-box">
@@ -133,7 +147,10 @@
 					<p class="text-sm text-gray-500">Este nominado todavía no tiene un video.</p>
 				{/if}
 
-				<button class="btn btn-outline self-center" type="button" onclick={openVideoPicker}>Cambiar video</button>
+				<button class="btn btn-outline self-center" type="button" onclick={openVideoPicker}>
+					<UploadSimpleIcon size="1rem" />
+					Cambiar video</button
+				>
 				<p class="text-center text-sm text-gray-500">Solo se permiten videos en formato .mp4 o .webm de hasta 300 MB</p>
 			</div>
 			<div class="modal-action flex-wrap">

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from "$app/forms";
+	import { PencilSimpleIcon } from "phosphor-svelte";
 
 	let {
 		award,
@@ -37,7 +38,10 @@
 	};
 </script>
 
-<button class="btn btn-ghost btn-sm pointer-events-auto" type="button" aria-label={`Editar award ${award.name}`} onclick={openDialog}>Editar</button>
+<button class="btn btn-ghost btn-sm pointer-events-auto" type="button" aria-label={`Editar award ${award.name}`} onclick={openDialog}>
+	<PencilSimpleIcon size="1rem" />
+	Editar
+</button>
 
 <dialog bind:this={dialog} class="modal pointer-events-auto" aria-labelledby={`edit-award-title-${award.id}`}>
 	<div class="modal-box">

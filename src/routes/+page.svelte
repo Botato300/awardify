@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from "$app/forms";
+	import TrashIcon from "phosphor-svelte/lib/TrashIcon";
+	import PlusIcon from "phosphor-svelte/lib/PlusIcon";
+
 	import type { PageProps } from "./$types";
 	import EditAwardDialog from "../components/EditAwardDialog.svelte";
 
@@ -56,7 +59,10 @@
 
 				<div class="flex flex-col gap-3 sm:flex-row">
 					<input class="input input-bordered w-full" type="text" name="name" placeholder="Nombre del award" required maxlength="100" value={form?.name ?? ""} />
-					<button class="btn btn-primary sm:w-auto" type="submit">Crear</button>
+					<button class="btn btn-primary sm:w-auto" type="submit">
+						<PlusIcon size="1rem" />
+						Crear
+					</button>
 				</div>
 			</div>
 		</form>
@@ -76,17 +82,22 @@
 						<a class="absolute inset-0 z-0 rounded-box link" href={`/awards/${award.id}`} aria-label={`Abrir award ${visibleAward.name}`}>
 							<span class="sr-only">Abrir award {visibleAward.name}</span>
 						</a>
+
 						<div class="card-body min-w-0">
 							<h2 class="card-title min-w-0 max-w-full"><span class="block min-w-0 max-w-full truncate">{visibleAward.name}</span></h2>
 						</div>
+
 						<div class="card-actions pointer-events-none relative z-10 justify-end px-6 pb-4">
 							<EditAwardDialog award={visibleAward} onEdited={updateAwardName} />
 							<button
 								class="btn btn-outline btn-error btn-sm pointer-events-auto"
 								type="button"
 								aria-label={`Eliminar award ${visibleAward.name}`}
-								onclick={() => confirmDeleteAward(visibleAward)}>Eliminar</button
+								onclick={() => confirmDeleteAward(visibleAward)}
 							>
+								<TrashIcon size="1rem" />
+								Eliminar
+							</button>
 						</div>
 					</article>
 				{/each}
@@ -98,11 +109,14 @@
 <dialog bind:this={deleteDialog} class="modal" aria-labelledby="delete-award-title">
 	<div class="modal-box">
 		<h2 id="delete-award-title" class="text-lg font-bold">Eliminar award</h2>
+
 		<p class="pt-4">Award a eliminar: <span class="truncate font-semibold">{awardToDelete?.name}</span></p>
+
 		<p>También se eliminarán sus categorías, nominados, y videos.</p>
 		{#if form?.deleteMessage}
 			<p class="alert alert-error" role="alert">{form.deleteMessage}</p>
 		{/if}
+
 		<div class="modal-action flex-wrap">
 			<form method="dialog">
 				<button class="btn" type="submit">Cancelar</button>
