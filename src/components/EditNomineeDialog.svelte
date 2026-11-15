@@ -88,12 +88,11 @@
 </script>
 
 <button
-	class="btn btn-ghost btn-sm shrink-0 tooltip"
+	class="btn btn-ghost btn-sm shrink-0"
 	type="button"
 	{disabled}
 	aria-label={`Editar nominado ${nominee.name}`}
 	onclick={openDialog}
-	data-tip="Editar nominado"
 >
 	<PencilSimpleIcon size="1rem" />
 </button>

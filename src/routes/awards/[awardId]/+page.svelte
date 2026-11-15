@@ -1,12 +1,16 @@
 <script lang="ts">
 	import { enhance, type SubmitFunction } from "$app/forms";
+	import { tick } from "svelte";
+
 	import ArrowLeftIcon from "phosphor-svelte/lib/ArrowLeftIcon";
 	import PencilSimpleIcon from "phosphor-svelte/lib/PencilSimpleIcon";
+	import DotsThreeVerticalIcon from "phosphor-svelte/lib/DotsThreeVerticalIcon";
 	import TrashIcon from "phosphor-svelte/lib/TrashIcon";
 
 	import type { PageProps } from "./$types";
 	import type { Nominee, Video } from "../../../models/award";
 
+	import Dropdown from "../../../components/Dropdown.svelte";
 	import EditNomineeDialog from "../../../components/EditNomineeDialog.svelte";
 	import AddNomineeDialog from "../../../components/AddNomineeDialog.svelte";
 	import VideoUploader from "../../../components/VideoUploader.svelte";
@@ -20,6 +24,7 @@
 	let { data, form }: PageProps = $props();
 	let deleteDialog: HTMLDialogElement;
 	let deleteCategoryDialog: HTMLDialogElement;
+	let categoryNameInput = $state<HTMLInputElement | undefined>(undefined);
 	let nomineeToDelete = $state<{ id: string; name: string } | null>(null);
 	let categoryToDelete = $state<{ id: string; name: string } | null>(null);
 	let categoryToEdit = $state<string | null>(null);
@@ -41,10 +46,12 @@
 		deleteCategoryDialog.showModal();
 	}
 
-	function startEditingCategory(categoryId: string, name: string): void {
+	async function startEditingCategory(categoryId: string, name: string): Promise<void> {
 		categoryToEdit = categoryId;
 		categoryEditName = name;
 		categoryEditMessage = "";
+		await tick();
+		categoryNameInput?.focus();
 	}
 
 	function cancelEditingCategory(): void {
@@ -179,6 +186,7 @@
 									<input type="hidden" name="categoryId" value={category.id} />
 									<label class="sr-only" for={`category-name-${category.id}`}>Nombre de la categoría</label>
 									<input
+										bind:this={categoryNameInput}
 										id={`category-name-${category.id}`}
 										class="input input-bordered input-sm min-w-0 flex-1"
 										type="text"
@@ -198,28 +206,44 @@
 									<h2 class="card-title min-w-0 flex-1">
 										<span class="block min-w-0 truncate">{categoryNameOverrides[category.id] ?? category.name}</span>
 									</h2>
-									<button
-										class="btn btn-ghost btn-sm shrink-0"
-										type="button"
-										aria-label={`Editar nombre de la categoría ${categoryNameOverrides[category.id] ?? category.name}`}
-										onclick={() => startEditingCategory(category.id, categoryNameOverrides[category.id] ?? category.name)}
-									>
-										<PencilSimpleIcon size="1.3rem" weight="duotone" />
-									</button>
 								</div>
 							{/if}
 							<div class="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto">
 								<AddNomineeDialog {category} onCreated={(nominee, file) => addPendingNominee(category.id, nominee, file)} />
-								<button
-									class="btn btn-outline btn-error btn-sm"
-									type="button"
-									disabled={isCategoryUploading}
-									aria-label={`Eliminar categoría ${category.name}`}
-									onclick={() => confirmDeleteCategory(category)}
-								>
-									<TrashIcon size="1rem" />
-									Eliminar categoría
-								</button>
+								<Dropdown label={`Opciones de la categoría ${categoryNameOverrides[category.id] ?? category.name}`}>
+									{#snippet trigger()}
+										<DotsThreeVerticalIcon size="1.3rem" weight="bold" />
+									{/snippet}
+									{#snippet menu(close)}
+										<li>
+											<button
+												type="button"
+												onclick={() => {
+													close();
+													startEditingCategory(category.id, categoryNameOverrides[category.id] ?? category.name);
+												}}
+												class="p-2"
+											>
+												<PencilSimpleIcon size="1rem" />
+												Cambiar nombre
+											</button>
+										</li>
+										<li>
+											<button
+												class="text-error p-2"
+												type="button"
+												disabled={isCategoryUploading}
+												onclick={() => {
+													close();
+													confirmDeleteCategory(category);
+												}}
+											>
+												<TrashIcon size="1rem" />
+												Eliminar categoría
+											</button>
+										</li>
+									{/snippet}
+								</Dropdown>
 							</div>
 							{#if isCategoryUploading}
 								<p class="w-full text-right text-sm text-gray-500">Espera a que termine la subida para eliminar la categoría.</p>
@@ -243,11 +267,10 @@
 													onEdited={updateNominee}
 												/>
 												<button
-													class="btn btn-ghost btn-sm shrink-0 text-error tooltip"
+													class="btn btn-ghost btn-sm shrink-0 text-error"
 													type="button"
 													disabled={uploadingNomineeIds.includes(nominee.id)}
 													aria-label={`Eliminar nominado ${nominee.name}`}
-													data-tip="Eliminar nominado"
 													onclick={() => confirmDeleteNominee(nominee)}
 												>
 													<TrashIcon size="1rem" />
